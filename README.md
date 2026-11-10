@@ -94,4 +94,6 @@ GitHub: [metswin17](https://github.com/metswin17)
 
 ### UML Diagram
 
-A component UML diagram documenting the relationships between App, Header, Form, Results, and Footer will be included with the Lab 26 submission.
+RESTy component structure and data flow.
+
+![RESTy Component UML Diagram](./assets/resty-uml.png)
