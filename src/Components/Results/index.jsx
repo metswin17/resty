@@ -1,11 +1,16 @@
+
 import './Results.scss';
 
-function Results({ data }) {
+function Results({ data, loading }) {
   return (
     <section>
-      <pre>
-        {data ? JSON.stringify(data, undefined, 2) : null}
-      </pre>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <pre>
+          {data ? JSON.stringify(data, null, 2) : null}
+        </pre>
+      )}
     </section>
   );
 }
