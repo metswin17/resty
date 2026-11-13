@@ -28,7 +28,7 @@ In Lab 26, the primary objective is to establish the application's component str
 - **Header:** Functional component displaying the application heading.
 - **Footer:** Functional component displaying the footer.
 - **Form:** Functional component containing the API request form and submitting data to App through props.
-- **Results:** Functional component displaying formatted mock API results.
+- **Results:** Functional component displaying API response headers, formatted JSON results, loading states, and request errors.
 
 Each component has its own SCSS stylesheet.
 
@@ -122,6 +122,85 @@ Example prompts included:
 
 All code changes were applied and tested locally by the developer.
 
+### Lab 28 — Phase 3: useEffect Hook and Live API Requests
+
+Lab 28 extends RESTy from simulated API responses to real HTTP requests using Axios and React's `useEffect` hook.
+
+#### Features Implemented
+
+- Used `useEffect` to trigger HTTP requests when submitted request parameters change.
+- Used Axios to communicate with external REST APIs.
+- Supported GET, POST, PUT, and DELETE method selection.
+- Added JSON request body parsing for POST and PUT.
+- Displayed response headers and response results separately.
+- Integrated `react-json-view-lite` for formatted, color-coded JSON.
+- Preserved the loading indicator while requests are pending.
+- Added error handling for failed requests and invalid JSON.
+- Used `AbortController` to cancel pending requests during effect cleanup.
+
+#### API Testing
+
+RESTy was manually tested using JSONPlaceholder.
+
+- GET `/todos/1` successfully retrieved a single resource.
+- GET `/users` successfully retrieved an array of user objects.
+- POST `/posts` successfully submitted a JSON request body and displayed the simulated created resource.
+
+JSONPlaceholder simulates POST operations without permanently storing submitted data.
+
+#### Automated Testing
+
+Lab 28 uses Vitest, React Testing Library, and Mock Service Worker (MSW).
+
+MSW intercepts HTTP requests during automated testing and returns predictable JSON responses without requiring access to the external API.
+
+The automated tests verify:
+
+- The RESTy heading renders correctly.
+- A user can submit a GET request.
+- The request method and URL are displayed.
+- Response headers and results appear.
+- Mocked API data is rendered correctly.
+
+Run the tests:
+
+```bash
+npm test
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+**Verification:** Both automated tests passed, and the production build completed successfully.
+
+#### AI Assistance Disclosure — Lab 28
+
+ChatGPT was used as a learning and development assistant during Lab 28.
+
+Assistance included:
+
+- Explaining `useEffect`, dependency arrays, and cleanup functions.
+- Guiding the integration of Axios for live API requests.
+- Explaining JSON parsing for POST request bodies.
+- Helping integrate a third-party JSON viewer.
+- Guiding the installation and configuration of MSW.
+- Updating React Testing Library tests for asynchronous API responses.
+- Diagnosing test failures caused by exact text matching.
+- Reviewing browser results, terminal output, and code placement.
+- Assisting with README documentation and Git workflow.
+
+Example prompts included:
+
+- "Could that also be considered the click press factor the user does and Effect changes?"
+- "Is this correct?"
+- "Do I put the URL in the box and hit POST and GO?"
+- "Did I put the right command?"
+- "Is this placed properly?"
+
+All code changes were applied and tested locally by the developer.
 
 ### Installation
 
@@ -168,6 +247,7 @@ npx oxlint src
 
 ### Development Branches
 
+- `effect-hook` — Lab 28 development branch
 - `state` — Lab 27 development branch
 - `main` — Initial project branch
 - `base` — Lab 26 development branch

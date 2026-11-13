@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import './App.scss';
 
@@ -14,22 +15,60 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const callApi = (params) => {
-    setLoading(true);
-    // Mock API response for Lab 27
-    const mockData = {
-      count: 2,
-      results: [
-        { name: 'fake thing 1', url: 'http://fakethings.com/1' },
-        { name: 'fake thing 2', url: 'http://fakethings.com/2' },
-      ],
-    };
+    setRequestParams({ ...params });
+  }; 
 
-    setTimeout(() => {
-      setData(mockData);
-      setRequestParams(params);
-      setLoading(false);
-    }, 1000);
-  };
+  useEffect(() => {
+    if (!requestParams.url || !requestParams.method) {
+      return;
+    }
+  
+    const controller = new AbortController();
+  
+    const fetchData = async () => {
+      setLoading(true);
+      setData(null);
+  
+      try {
+
+        const requestBody = requestParams.body
+  ? JSON.parse(requestParams.body)
+  : undefined;
+
+        const response = await axios({
+          url: requestParams.url,
+          method: requestParams.method,
+          data: requestBody,
+          signal: controller.signal,
+        });
+  
+        setData({
+          headers: response.headers.toJSON(),
+          results: response.data,
+        });
+  
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+  
+        setData({
+          error: error.message,
+        });
+  
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+  
+    fetchData();
+  
+    return () => {
+      controller.abort();
+    };
+  }, [requestParams]);
 
   return (
     <>
