@@ -13,5 +13,14 @@ export const server = setupServer(
         name: 'Warehouse Two',
       },
     ]);
+  }),
+
+  http.get('https://jsonplaceholder.typicode.com/posts/1', () => {
+    return HttpResponse.json({
+      userId: 1,
+      id: 1,
+      title: 'RESTy History Test Post',
+      body: 'This response comes from our MSW mock server.',
+    });
   })
 );

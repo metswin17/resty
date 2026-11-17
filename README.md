@@ -202,6 +202,99 @@ Example prompts included:
 
 All code changes were applied and tested locally by the developer.
 
+### Lab 29 — Phase 4: useReducer Hook and Request History
+
+Lab 29 extends RESTy by replacing the application's `useState` management with React's `useReducer` hook and adding a request History component.
+
+#### Features Implemented
+
+- Refactored App.jsx to use `useReducer` for centralized state management.
+- Created `src/reducer.js` containing the initial state and reducer actions.
+- Implemented reducer actions for setting requests, starting API calls, handling successful responses, and handling errors.
+- Added a History component to display previously completed API requests.
+- Stored request parameters and corresponding response data in History.
+- Allowed users to select previous requests and redisplay saved results.
+- Separated `requestParams` from `displayRequest` so selecting History does not trigger another API request.
+- Preserved the loading indicator, error handling, and formatted JSON display.
+- Continued using Axios and `useEffect` for live HTTP requests.
+
+#### Request History Data Flow
+
+1. The user enters a URL, selects an HTTP method, and clicks GO!.
+2. App dispatches `SET_REQUEST` to the reducer.
+3. The change to `requestParams` triggers `useEffect`.
+4. Axios sends the HTTP request.
+5. On success, App dispatches `FETCH_SUCCESS`.
+6. The reducer stores the response and adds the completed request to History.
+7. When the user selects a History entry, App dispatches `SHOW_HISTORY`.
+8. The reducer restores the saved response without changing `requestParams`, avoiding another API request.
+
+#### Automated Testing
+
+Lab 29 uses Vitest, React Testing Library, and Mock Service Worker (MSW).
+
+Three automated tests verify:
+
+- The RESTy application heading renders correctly.
+- A GET request displays the request information and API response.
+- Selecting a previous History entry restores the saved response without making another API request.
+
+The MSW server provides predictable responses for `/users` and `/posts/1`.
+
+Run automated tests:
+
+```bash
+npm test
+```
+
+Run code-quality checks:
+
+```bash
+npm run lint
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+**Verification Results:**
+
+- 3 automated tests passed.
+- Oxlint reported 0 errors and 0 warnings.
+- Vite production build completed successfully.
+- Manual browser testing confirmed that History restores saved responses without additional API requests.
+- Sass reported non-blocking deprecation warnings for `darken()`.
+
+#### AI Assistance Disclosure — Lab 29
+
+ChatGPT was used as a learning and development assistant during Lab 29.
+
+Assistance included:
+
+- Explaining React's `useReducer` hook, initial state, actions, and dispatch.
+- Guiding the refactoring of App.jsx from `useState` to `useReducer`.
+- Helping create the History component and connect it to App.
+- Identifying and correcting an unnecessary API request triggered by History selection.
+- Explaining the relationship between reducer state and `useEffect` dependencies.
+- Guiding the implementation of MSW mock responses.
+- Helping write and understand the automated History test.
+- Reviewing terminal output, test results, linting, and production builds.
+- Assisting with README documentation and Git preparation.
+
+Example prompts included:
+
+- "That learning approach what why and flow sounds great."
+- "History selection connected."
+- "Display request separated Chief."
+- "I don't know where to put this."
+- "Do you have an ETA to finish assignment?"
+
+The developer applied the code changes locally, performed manual browser testing, and executed the automated tests.
+
+
+
 ### Installation
 
 Clone the repository:
@@ -247,6 +340,7 @@ npx oxlint src
 
 ### Development Branches
 
+- `reducer-hook` — Lab 29 development branch
 - `effect-hook` — Lab 28 development branch
 - `state` — Lab 27 development branch
 - `main` — Initial project branch
