@@ -1,6 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import axios from 'axios';
+
+import { reducer, initialState } from './reducer';
 
 import './App.scss';
 
@@ -8,15 +10,33 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import History from './Components/History';
 
 function App() {
-  const [data, setData] = useState(null);
-  const [requestParams, setRequestParams] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const callApi = (params) => {
-    setRequestParams({ ...params });
-  }; 
+  const { data, requestParams, displayRequest, loading, history } = state;
+
+const callApi = (params) => {
+  dispatch({
+    type: 'SET_REQUEST',
+    payload: { ...params },
+  });
+};
+
+const handleHistorySelect = (entry) => {
+  dispatch({
+    type: 'SHOW_HISTORY',
+    payload: {
+      request: {
+        method: entry.method,
+        url: entry.url,
+        body: entry.body,
+      },
+      data: entry.data,
+    },
+  });
+};
 
   useEffect(() => {
     if (!requestParams.url || !requestParams.method) {
@@ -26,8 +46,9 @@ function App() {
     const controller = new AbortController();
   
     const fetchData = async () => {
-      setLoading(true);
-      setData(null);
+      dispatch({
+        type: 'FETCH_START',
+      });
   
       try {
 
@@ -42,9 +63,15 @@ function App() {
           signal: controller.signal,
         });
   
-        setData({
-          headers: response.headers.toJSON(),
-          results: response.data,
+        dispatch({
+          type: 'FETCH_SUCCESS',
+          payload: {
+            request: requestParams,
+            data: {
+              headers: response.headers.toJSON(),
+              results: response.data,
+            },
+          },
         });
   
       } catch (error) {
@@ -52,14 +79,11 @@ function App() {
           return;
         }
   
-        setData({
-          error: error.message,
+        dispatch({
+          type: 'FETCH_ERROR',
+          payload: error.message,
         });
   
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
       }
     };
   
@@ -73,11 +97,18 @@ function App() {
   return (
     <>
       <Header />
-      <div>Request Method: {requestParams.method}</div>
-      <div>URL: {requestParams.url}</div>
+      <div>Request Method: {displayRequest.method}</div>
+      <div>URL: {displayRequest.url}</div>
       <Form handleApiCall={callApi} />
-      <Results data={data} loading={loading} />
-      <Footer />
+
+<History
+history={history}
+onSelect={handleHistorySelect}
+/>
+
+<Results data={data} loading={loading} />
+
+<Footer />
     </>
   );
 }
